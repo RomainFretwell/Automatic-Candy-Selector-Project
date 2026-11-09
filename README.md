@@ -2,6 +2,10 @@
 [x] choisir un modèle (resnet50 ?)
 [x] choisir moteur d'exécution (pythorch ?)
 [x] tester sur des images qu'il connait (faire inférer)
+[x] faire un git
+[ ] prendre des photos
+[ ] trier photo dans dossiers par classe
+[ ] entraîner modèle
 
 # Choix du modèle
 ResNet-50
@@ -21,19 +25,10 @@ plus simple à utiliser
 beaucoup de tutoriels
 mais il faudra quand même faire l'appli finale en java
 
-# Brouillon
-
-2 ia différentes pour chaque pour partie (classification et détection)
-
-## Classification :
-pour trouver la forme du bonbon : par ia, baisser la résolution 224x224
-pour trouver la couleur : par ia aussi
-
 # Dataset :
 - sur fond blanc / fond random
 - bcp lumière / pas bcp
 - pas d'ombre / plusieurs angles d'ombre
 - angles de photo
 - cas le plus simple = photo prise du dessus + fond blanc + lumière du dessus (pas d'ombre et assez lumineux)
-
-combien d'images ? combien par catégories ?
+à justifier : combien d'images ? combien par catégories ?
