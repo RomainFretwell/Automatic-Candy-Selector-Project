@@ -9,22 +9,22 @@
 - [ ] entraîner modèle
 
 # Choix du modèle
-ResNet-50
+- [x] ResNet-50
 ### avantages :
-moins de paramètres que VGG
-moins lourd que VGG
-un peu plus précis que VGG
-à peu près les mêmes stats que inception-v3 mais plus simple d'utilisation
-finetuning beaucoup plus facile qu'avec inception-v3
-ResNet très documenté car plus couramment utilisé (beaucoup de tuto)
-On peut utiliser "cuda" pour utiliser le gpu de l'ordinateur plutôt que le cpu
+- moins de paramètres que VGG
+- moins lourd que VGG
+- un peu plus précis que VGG
+- à peu près les mêmes stats que inception-v3 mais plus simple d'utilisation
+- finetuning beaucoup plus facile qu'avec inception-v3
+- ResNet très documenté car plus couramment utilisé (beaucoup de tuto)
+- On peut utiliser "cuda" pour utiliser le gpu de l'ordinateur plutôt que le cpu
 
 # Choix du moteur d'exécution
-pytorch
+- [x] pytorch
 ### avantages :
-plus simple à utiliser
-beaucoup de tutoriels
-mais il faudra quand même faire l'appli finale en java
+- plus simple à utiliser
+- beaucoup de tutoriels
+- mais il faudra quand même faire l'appli finale en java
 
 # Dataset :
 - sur fond blanc / fond random
@@ -32,4 +32,4 @@ mais il faudra quand même faire l'appli finale en java
 - pas d'ombre / plusieurs angles d'ombre
 - angles de photo
 - cas le plus simple = photo prise du dessus + fond blanc + lumière du dessus (pas d'ombre et assez lumineux)
-à justifier : combien d'images ? combien par catégories ?
+- [ ] à justifier : combien d'images ? combien par catégories ?
