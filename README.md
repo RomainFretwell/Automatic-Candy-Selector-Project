@@ -1,11 +1,12 @@
 # à faire
-[x] choisir un modèle (resnet50 ?)
-[x] choisir moteur d'exécution (pythorch ?)
-[x] tester sur des images qu'il connait (faire inférer)
-[x] faire un git
-[ ] prendre des photos
-[ ] trier photo dans dossiers par classe
-[ ] entraîner modèle
+- [x] choisir un modèle (resnet50 ?)
+- [x] choisir moteur d'exécution (pythorch ?)
+- [x] tester sur des images qu'il connait (faire inférer)
+- [x] faire un git
+- [x] prendre des photos
+- [ ] trier photo dans dossiers par classe
+- [ ] renommer photo "type_couleur_num"
+- [ ] entraîner modèle
 
 # Choix du modèle
 ResNet-50
