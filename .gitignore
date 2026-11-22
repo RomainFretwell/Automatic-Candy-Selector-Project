@@ -1,0 +1,6 @@
+# poids des modèles entraînés (~95 Mo, trop lourds pour git : on les regénère avec src/train.py)
+models/*.pt
+models/*.onnx
+
+# caches Python
+__pycache__/
