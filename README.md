@@ -4,12 +4,13 @@
 - [x] tester sur des images qu'il connait (faire inférer)
 - [x] faire un git
 - [x] prendre des photos
-- [ ] trier photo dans dossiers par classe
-- [ ] renommer photo "type_couleur_num"
+- [x] trier photo dans dossiers par classe
+- [x] séparer test et entrainement 20-80
+- [ ] plus de photo en faisant des combinaisons de zoom et de rotation des photos qu'on a déjà
 - [ ] entraîner modèle
 
 # Choix du modèle
-- [x] ResNet-50
+- ResNet-50
 ### avantages :
 - moins de paramètres que VGG
 - moins lourd que VGG
@@ -20,7 +21,7 @@
 - On peut utiliser "cuda" pour utiliser le gpu de l'ordinateur plutôt que le cpu
 
 # Choix du moteur d'exécution
-- [x] pytorch
+- pytorch
 ### avantages :
 - plus simple à utiliser
 - beaucoup de tutoriels
