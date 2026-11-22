@@ -1,0 +1,128 @@
+{
+    "nImages": 36,
+    "typeAccuracy": 1.0,
+    "colorAccuracy": 1.0,
+    "bothAccuracy": 1.0,
+    "typePerClass": {
+        "Crocodile": 1.0,
+        "Dragibus": 1.0,
+        "Fraise": 1.0,
+        "Oeuf": 1.0,
+        "Ourson": 1.0,
+        "Schtroumpf": 1.0
+    },
+    "colorPerClass": {
+        "fraise": 1.0,
+        "jaune": 1.0,
+        "oeuf": 1.0,
+        "rouge": 1.0,
+        "schtroumpf": 1.0
+    },
+    "typeConfusion": {
+        "classes": [
+            "Crocodile",
+            "Dragibus",
+            "Fraise",
+            "Oeuf",
+            "Ourson",
+            "Schtroumpf"
+        ],
+        "matrix": [
+            [
+                9,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                4,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                5,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                2,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                10,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                6
+            ]
+        ]
+    },
+    "colorConfusion": {
+        "classes": [
+            "fraise",
+            "jaune",
+            "oeuf",
+            "rouge",
+            "schtroumpf"
+        ],
+        "matrix": [
+            [
+                5,
+                0,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                4,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                2,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                19,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                6
+            ]
+        ]
+    },
+    "errors": []
+}
