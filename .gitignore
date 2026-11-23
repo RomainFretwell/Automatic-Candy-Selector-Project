@@ -4,3 +4,6 @@ models/*.onnx
 
 # caches Python
 __pycache__/
+
+# photos originales haute résolution (~730 Mo) : importées en 224x224 par src/importPhotos.py
+photo_bonbon/
