@@ -8,11 +8,14 @@
 - [x] séparer test et entrainement 20-80
 - [x] passer les étiquettes en JSON (type + couleur dominante)
 - [x] plus de photo en faisant des combinaisons de zoom et de rotation des photos qu'on a déjà
-- [x] entraîner modèle (100 % sur les 36 images de test)
-- [ ] prendre plus de photos (autres couleurs, test plus varié)
+- [x] entraîner modèle
+- [x] prendre toutes les photos pour la classification
 - [ ] gérer les images qui ne sont pas des bonbons
 - [ ] exporter le modèle (ONNX ?) pour l'appli Java
-- [ ] partie détection
+- [ ] faire l'appli java
+- [ ] choisir modèle et moteur pour la partie detection
+- [ ] faire dataset pour detection
+- [ ] faire partie détection
 
 # Choix du modèle
 - ResNet-50
@@ -30,17 +33,16 @@
 ### avantages :
 - plus simple à utiliser
 - beaucoup de tutoriels
-- mais il faudra quand même faire l'appli finale en java
 
-# Dataset :
-- sur fond blanc / fond random
-- bcp lumière / pas bcp
-- pas d'ombre / plusieurs angles d'ombre
-- angles de photo
-- cas le plus simple = photo prise du dessus + fond blanc + lumière du dessus (pas d'ombre et assez lumineux)
-- [ ] à justifier : combien d'images ? combien par catégories ?
-- format : `dataset/<entrainement|test>/images/` + `labels.json` (type + couleur de chaque image)
+# Dataset classification :
+- sur fond blanc avec plusieurs angles de photo
+- 20 photos par bonbon + 100 variantes
 - les variantes générées (rotation, zoom, luminosité) sont dans `dataset/entrainement/images_supplémentaires/`
+
+# Dataset detection :
+- sur plusieurs fonds random
+- faire varier le nombre de bonbon
+- rajouter decors et objets random
 
 # Utilisation (classification)
 Depuis `Automatic-Candy-Selector-Project/`, dans PowerShell :
