@@ -25,7 +25,7 @@ from labelsIo import loadLabels, saveLabels
 
 AUG_DIR = "images_supplémentaires"
 ROTATION_DEGREES = 180      # le bonbon est photographié du dessus : toutes les orientations sont réalistes
-ZOOM_RANGE = (0.85, 1.15)   # dézoom / zoom de 15 % max
+ZOOM_RANGE = (0.6, 1.3)     # bonbon plus petit (x0.6) ou plus gros (x1.3) que sur la photo importée
 BRIGHTNESS = 0.2            # luminosité +/- 20 %
 
 
@@ -34,9 +34,10 @@ def makeVariant(img, seed):
     torch.manual_seed(seed)
     w, h = img.size
     transform = v2.Compose([
-        # on agrandit l'image en reflétant ses bords : après rotation, les coins
-        # contiennent du "fond" réaliste au lieu de triangles de couleur unie
-        v2.Pad(padding=w // 2, padding_mode="reflect"),
+        # on agrandit l'image en prolongeant ses bords : après rotation / dézoom, les coins
+        # contiennent du "fond" réaliste au lieu de triangles noirs (pas de miroir :
+        # en dézoomant, il ferait apparaître des copies du bonbon)
+        v2.Pad(padding=w, padding_mode="edge"),
         v2.RandomAffine(degrees=ROTATION_DEGREES, scale=ZOOM_RANGE),
         v2.CenterCrop((h, w)),
         v2.ColorJitter(brightness=BRIGHTNESS),
