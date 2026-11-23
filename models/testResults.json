@@ -1,8 +1,15 @@
 {
     "nImages": 105,
+    "validCombinations": 22,
     "typeAccuracy": 1.0,
     "colorAccuracy": 1.0,
     "bothAccuracy": 1.0,
+    "independentHeads": {
+        "typeAccuracy": 1.0,
+        "colorAccuracy": 1.0,
+        "bothAccuracy": 1.0,
+        "invalidPairs": 0
+    },
     "typePerClass": {
         "Crocodile": 1.0,
         "Dragibus": 1.0,
