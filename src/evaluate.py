@@ -77,9 +77,10 @@ def printReport(results):
     print(f"Précision type    : {results['typeAccuracy']:.1%}")
     print(f"Précision couleur : {results['colorAccuracy']:.1%}")
     print(f"Type ET couleur   : {results['bothAccuracy']:.1%}\n")
-    print("Précision par type :")
-    for name, acc in results["typePerClass"].items():
-        print(f"   {name:12s} {acc:.0%}" if acc is not None else f"   {name:12s} (aucune image)")
+    for title, key in (("Précision par type :", "typePerClass"), ("\nPrécision par couleur :", "colorPerClass")):
+        print(title)
+        for name, acc in results[key].items():
+            print(f"   {name:12s} {acc:.0%}" if acc is not None else f"   {name:12s} (aucune image)")
     print(f"\nErreurs ({len(results['errors'])}) :")
     for e in results["errors"]:
         print(f"   {e['image']} : vrai = {e['true']}, prédit = {e['predicted']}")

@@ -20,9 +20,12 @@ IMAGENET_STD = [0.229, 0.224, 0.225]
 
 def imageTransform():
     # prétraitement volontairement simple (redimension + normalisation) pour être
-    # facile à reproduire plus tard dans l'application Java
+    # facile à reproduire plus tard dans l'application Java :
+    # petit côté ramené à 224 puis carré central -> pas de déformation sur une photo
+    # rectangulaire (même traitement que importPhotos.py ; sans effet sur une image 224x224)
     return transforms.Compose([
-        transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+        transforms.Resize(IMAGE_SIZE),
+        transforms.CenterCrop(IMAGE_SIZE),
         transforms.ToTensor(),
         transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
     ])
@@ -37,17 +40,18 @@ def buildVocab(labels):
 
 def splitTrainVal(labels, valRatio, seed=0):
     """
-    Met de côté une partie des photos d'origine pour la validation (stratifié par type).
+    Met de côté une partie des photos d'origine pour la validation (stratifié par type + couleur,
+    pour que chaque combinaison soit représentée).
     Les variantes augmentées d'une photo de validation sont exclues de l'entraînement,
     sinon le modèle aurait déjà "vu" la photo et la validation serait trop optimiste.
     """
     rng = random.Random(seed)
-    originalsByType = defaultdict(list)
+    originalsByClass = defaultdict(list)
     for e in labels:
         if "augmentedFrom" not in e:
-            originalsByType[e["type"]].append(e["image"])
+            originalsByClass[(e["type"], e["color"])].append(e["image"])
     valImages = set()
-    for images in originalsByType.values():
+    for _, images in sorted(originalsByClass.items()):
         nVal = max(1, round(len(images) * valRatio))
         valImages.update(rng.sample(sorted(images), nVal))
     val = [e for e in labels if e["image"] in valImages]
