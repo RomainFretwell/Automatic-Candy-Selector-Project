@@ -38,6 +38,11 @@ def buildVocab(labels):
     return types, colors
 
 
+def buildCombinations(labels):
+    # combinaisons (type, couleur) qui existent dans le dataset, ex : ["Schtroumpf", "bleu-rouge"]
+    return sorted([t, c] for t, c in {(e["type"], e["color"]) for e in labels})
+
+
 def splitTrainVal(labels, valRatio, seed=0):
     """
     Met de côté une partie des photos d'origine pour la validation (stratifié par type + couleur,

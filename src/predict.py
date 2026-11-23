@@ -13,7 +13,7 @@ import torch
 from PIL import Image
 
 from candyDataset import imageTransform
-from candyModel import getDevice, loadCheckpoint
+from candyModel import bestCombination, getDevice, loadCheckpoint
 
 EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".jfif"}
 
@@ -30,14 +30,13 @@ def listImages(paths):
     return images
 
 
-def predictImage(model, imagePath, device):
-    # renvoie (index type, proba type, index couleur, proba couleur)
+def predictImage(model, imagePath, device, classes):
+    # renvoie (index type, index couleur, confiance) de la combinaison valide la plus probable
     x = imageTransform()(Image.open(imagePath).convert("RGB")).unsqueeze(0).to(device)
     with torch.no_grad():
         typeLogits, colorLogits = model(x)
-    typeProbas = torch.softmax(typeLogits, dim=1)[0]
-    colorProbas = torch.softmax(colorLogits, dim=1)[0]
-    return typeProbas.argmax().item(), typeProbas.max().item(), colorProbas.argmax().item(), colorProbas.max().item()
+    typeIdx, colorIdx, confidence = bestCombination(typeLogits, colorLogits, *classes)
+    return typeIdx.item(), colorIdx.item(), confidence.item()
 
 
 def main():
@@ -46,13 +45,14 @@ def main():
     parser.add_argument("--model", default="models/candyResnet50.pt")
     args = parser.parse_args()
     device = getDevice()
-    model, typeClasses, colorClasses = loadCheckpoint(args.model, device)
+    model, typeClasses, colorClasses, combinations = loadCheckpoint(args.model, device)
+    classes = (combinations, typeClasses, colorClasses)
     for imagePath in listImages(args.images):
-        typeIdx, typeConf, colorIdx, colorConf = predictImage(model, imagePath, device)
+        typeIdx, colorIdx, confidence = predictImage(model, imagePath, device, classes)
         print(f"=== {imagePath.name}")
         print(f"   Type : {typeClasses[typeIdx]}")
         print(f"   Couleur : {colorClasses[colorIdx]}")
-        print(f"   Confiance : type {typeConf:.0%} / couleur {colorConf:.0%}\n")
+        print(f"   Confiance : {confidence:.0%}\n")
 
 
 if __name__ == "__main__":

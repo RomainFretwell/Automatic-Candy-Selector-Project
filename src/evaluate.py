@@ -5,6 +5,8 @@ Usage :
     python src/evaluate.py
     python src/evaluate.py --model models/candyResnet50.pt --data dataset/test
 Sorties (dossier models/) : testResults.json, confusionType.png, confusionColor.png
+La réponse évaluée est la combinaison (type, couleur) valide la plus probable ; on la compare
+aussi aux deux sorties prises séparément (ancienne méthode).
 """
 import argparse
 import json
@@ -17,20 +19,23 @@ import torch
 from torch.utils.data import DataLoader
 
 from candyDataset import loadSplit
-from candyModel import getDevice, loadCheckpoint
+from candyModel import bestCombination, getDevice, loadCheckpoint
 
 
-def predictAll(model, loader, device):
-    # renvoie les vraies classes et les classes prédites, pour le type et la couleur
-    trueType, predType, trueColor, predColor = [], [], [], []
+def predictAll(model, loader, device, classes):
+    # vraies classes, réponse finale (combinaison valide) et sorties séparées ("raw"), en listes d'index
+    p = {k: [] for k in ("trueType", "trueColor", "type", "color", "rawType", "rawColor")}
     with torch.no_grad():
         for x, yType, yColor in loader:
             typeLogits, colorLogits = model(x.to(device))
-            trueType += yType.tolist()
-            predType += typeLogits.argmax(1).cpu().tolist()
-            trueColor += yColor.tolist()
-            predColor += colorLogits.argmax(1).cpu().tolist()
-    return trueType, predType, trueColor, predColor
+            typeIdx, colorIdx, _ = bestCombination(typeLogits, colorLogits, *classes)
+            p["trueType"] += yType.tolist()
+            p["trueColor"] += yColor.tolist()
+            p["type"] += typeIdx.cpu().tolist()
+            p["color"] += colorIdx.cpu().tolist()
+            p["rawType"] += typeLogits.argmax(1).cpu().tolist()
+            p["rawColor"] += colorLogits.argmax(1).cpu().tolist()
+    return p
 
 
 def confusionMatrix(true, pred, nClasses):
@@ -58,13 +63,13 @@ def plotConfusion(matrix, classes, title, outFile):
     fig.savefig(outFile, dpi=120)
 
 
-def listErrors(dataset, trueType, predType, trueColor, predColor, typeClasses, colorClasses):
+def listErrors(dataset, p, typeClasses, colorClasses):
     errors = []
     for i, entry in enumerate(dataset.entries):
-        if trueType[i] != predType[i] or trueColor[i] != predColor[i]:
+        if p["trueType"][i] != p["type"][i] or p["trueColor"][i] != p["color"][i]:
             errors.append({"image": entry["image"],
-                           "true": f"{typeClasses[trueType[i]]} {colorClasses[trueColor[i]]}",
-                           "predicted": f"{typeClasses[predType[i]]} {colorClasses[predColor[i]]}"})
+                           "true": f"{typeClasses[p['trueType'][i]]} {colorClasses[p['trueColor'][i]]}",
+                           "predicted": f"{typeClasses[p['type'][i]]} {colorClasses[p['color'][i]]}"})
     return errors
 
 
@@ -72,11 +77,28 @@ def accuracy(true, pred):
     return sum(t == p for t, p in zip(true, pred)) / len(true)
 
 
+def accuracies(p, predType, predColor):
+    # précision type, couleur et type ET couleur des prédictions données
+    both = [tt == pt and tc == pc for tt, pt, tc, pc in zip(p["trueType"], predType, p["trueColor"], predColor)]
+    return {"typeAccuracy": accuracy(p["trueType"], predType),
+            "colorAccuracy": accuracy(p["trueColor"], predColor),
+            "bothAccuracy": sum(both) / len(both)}
+
+
+def countInvalidPairs(p, combinations, typeClasses, colorClasses):
+    # nombre de paires (type, couleur) inexistantes données par les sorties séparées
+    valid = {(t, c) for t, c in combinations}
+    return sum((typeClasses[t], colorClasses[c]) not in valid for t, c in zip(p["rawType"], p["rawColor"]))
+
+
 def printReport(results):
     print(f"Images de test : {results['nImages']}")
     print(f"Précision type    : {results['typeAccuracy']:.1%}")
     print(f"Précision couleur : {results['colorAccuracy']:.1%}")
-    print(f"Type ET couleur   : {results['bothAccuracy']:.1%}\n")
+    print(f"Type ET couleur   : {results['bothAccuracy']:.1%}")
+    raw = results["independentHeads"]
+    print(f"(sorties séparées : type {raw['typeAccuracy']:.1%}, couleur {raw['colorAccuracy']:.1%}, "
+          f"les deux {raw['bothAccuracy']:.1%}, paires impossibles : {raw['invalidPairs']})\n")
     for title, key in (("Précision par type :", "typePerClass"), ("\nPrécision par couleur :", "colorPerClass")):
         print(title)
         for name, acc in results[key].items():
@@ -88,22 +110,24 @@ def printReport(results):
 
 def evaluate(args):
     device = getDevice()
-    model, typeClasses, colorClasses = loadCheckpoint(args.model, device)
+    model, typeClasses, colorClasses, combinations = loadCheckpoint(args.model, device)
     dataset = loadSplit(args.data, typeClasses, colorClasses)
-    trueType, predType, trueColor, predColor = predictAll(model, DataLoader(dataset, batch_size=32), device)
-    typeMatrix = confusionMatrix(trueType, predType, len(typeClasses))
-    colorMatrix = confusionMatrix(trueColor, predColor, len(colorClasses))
-    both = [tt == pt and tc == pc for tt, pt, tc, pc in zip(trueType, predType, trueColor, predColor)]
+    classes = (combinations, typeClasses, colorClasses)
+    p = predictAll(model, DataLoader(dataset, batch_size=32), device, classes)
+    typeMatrix = confusionMatrix(p["trueType"], p["type"], len(typeClasses))
+    colorMatrix = confusionMatrix(p["trueColor"], p["color"], len(colorClasses))
+    independent = accuracies(p, p["rawType"], p["rawColor"])
+    independent["invalidPairs"] = countInvalidPairs(p, combinations, typeClasses, colorClasses)
     results = {
         "nImages": len(dataset),
-        "typeAccuracy": accuracy(trueType, predType),
-        "colorAccuracy": accuracy(trueColor, predColor),
-        "bothAccuracy": sum(both) / len(both),
+        "validCombinations": len(combinations),
+        **accuracies(p, p["type"], p["color"]),
+        "independentHeads": independent,
         "typePerClass": perClassAccuracy(typeMatrix, typeClasses),
         "colorPerClass": perClassAccuracy(colorMatrix, colorClasses),
         "typeConfusion": {"classes": typeClasses, "matrix": typeMatrix},
         "colorConfusion": {"classes": colorClasses, "matrix": colorMatrix},
-        "errors": listErrors(dataset, trueType, predType, trueColor, predColor, typeClasses, colorClasses),
+        "errors": listErrors(dataset, p, typeClasses, colorClasses),
     }
     return results, typeMatrix, colorMatrix, typeClasses, colorClasses
 

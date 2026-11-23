@@ -20,7 +20,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from candyDataset import CandyDataset, buildVocab, splitTrainVal
+from candyDataset import CandyDataset, buildCombinations, buildVocab, splitTrainVal
 from candyModel import CandyNet, getDevice, saveCheckpoint
 from labelsIo import loadLabels
 
@@ -44,10 +44,12 @@ def makeLoaders(args):
     trainSet = CandyDataset(args.data, trainEntries, typeClasses, colorClasses)
     valSet = CandyDataset(args.data, valEntries, typeClasses, colorClasses)
     print(f"Types : {typeClasses}\nCouleurs : {colorClasses}")
+    combinations = buildCombinations(labels)
+    print(f"Combinaisons valides : {len(combinations)}")
     print(f"Entraînement : {len(trainSet)} images | validation : {len(valSet)} photos d'origine\n")
     trainLoader = DataLoader(trainSet, batch_size=args.batch, shuffle=True)
     valLoader = DataLoader(valSet, batch_size=args.batch)
-    return trainLoader, valLoader, typeClasses, colorClasses
+    return trainLoader, valLoader, typeClasses, colorClasses, combinations
 
 
 def runEpoch(model, loader, device, optimizer=None):
@@ -99,7 +101,7 @@ def train(args):
     device = getDevice()
     outDir = Path(args.out)
     outDir.mkdir(exist_ok=True)
-    trainLoader, valLoader, typeClasses, colorClasses = makeLoaders(args)
+    trainLoader, valLoader, typeClasses, colorClasses, combinations = makeLoaders(args)
     model = CandyNet(len(typeClasses), len(colorClasses)).to(device)
     # fine-tuning complet avec un petit learning rate pour ne pas "casser" les poids ImageNet
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -111,7 +113,7 @@ def train(args):
         better, score = isBetter(valMetrics, best)
         if better:
             best = score
-            saveCheckpoint(outDir / "candyResnet50.pt", model, typeClasses, colorClasses)
+            saveCheckpoint(outDir / "candyResnet50.pt", model, typeClasses, colorClasses, combinations)
         print(f"Époque {epoch:2d} | train loss {trainMetrics['loss']:.3f} type {trainMetrics['typeAcc']:.0%}"
               f" | val loss {valMetrics['loss']:.3f} type {valMetrics['typeAcc']:.0%}"
               f" couleur {valMetrics['colorAcc']:.0%}" + ("  <- sauvegardé" if better else ""))
