@@ -4,7 +4,7 @@ Importe les photos haute résolution de photo_bonbon/ dans le dataset (répartit
 photo_bonbon/ contient un sous-dossier par combinaison type + couleur, nommé type_couleur
 (ex : crocodile_bleu, schtroumpf_bleu-blanc). Pour chaque photo pas encore importée :
     - remise dans le bon sens (rotation EXIF du téléphone) ;
-    - carré central rogné puis réduit en 224x224 (le bonbon est à peu près centré) ;
+    - carré découpé autour du bonbon (candyCrop.py, bonbon ~70 % du côté) puis réduit en 224x224 ;
     - enregistrée dans <split>/images/<dossier>_<nom>.jpg et ajoutée au labels.json du split.
 Les originaux restent dans photo_bonbon/ (hors git) : on peut relancer le script après
 chaque séance photo, seules les nouvelles photos sont importées.
@@ -19,6 +19,7 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
+from candyCrop import cropCandy
 from labelsIo import loadLabels, saveLabels
 
 EXTS = {".jpg", ".jpeg", ".png"}
@@ -35,9 +36,10 @@ def parseFolderName(name):
 
 
 def toSquare(img, size):
-    # rotation EXIF puis carré central réduit en size x size
+    # rotation EXIF, carré autour du bonbon puis réduction en size x size ; renvoie (image, bonbon trouvé)
     img = ImageOps.exif_transpose(img).convert("RGB")
-    return ImageOps.fit(img, (size, size), method=Image.Resampling.LANCZOS)
+    square, found = cropCandy(img)
+    return square.resize((size, size), Image.Resampling.LANCZOS), found
 
 
 def splitPhotos(photos, testRatio, seed):
@@ -63,7 +65,10 @@ def targetName(folder, photo):
 def importPhoto(photo, folder, splitDir, candyType, color):
     name = targetName(folder, photo)
     with Image.open(photo) as img:
-        toSquare(img, IMAGE_SIZE).save(Path(splitDir) / name, quality=95)
+        square, found = toSquare(img, IMAGE_SIZE)
+    square.save(Path(splitDir) / name, quality=95)
+    if not found:
+        print(f"[!] Bonbon non trouvé, carré central utilisé : {photo}")
     return {"image": name, "type": candyType, "color": color}
 
 
