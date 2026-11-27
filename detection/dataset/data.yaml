@@ -1,0 +1,26 @@
+# généré par src/importDataset.py
+train: entrainement/images
+test: test/images
+names:
+    0: crocodile_bleu
+    1: crocodile_jaune
+    2: crocodile_orange
+    3: crocodile_rouge
+    4: crocodile_vert
+    5: dragibus_bleu
+    6: dragibus_jaune
+    7: dragibus_noir
+    8: dragibus_rose
+    9: dragibus_rouge
+    10: dragibus_vert
+    11: oeuf_oeuf
+    12: ourson_blanc
+    13: ourson_jaune
+    14: ourson_orangeClair
+    15: ourson_orangeFonce
+    16: ourson_rouge
+    17: ourson_vert
+    18: schtroumpf_bleu-blanc
+    19: schtroumpf_bleu-jaune
+    20: schtroumpf_bleu-rouge
+    21: tagada_fraise
