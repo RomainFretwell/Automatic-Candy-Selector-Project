@@ -1,9 +1,16 @@
-# poids des modèles entraînés (~95 Mo, trop lourds pour git : on les regénère avec src/train.py)
-models/*.pt
-models/*.onnx
+# poids des modèles entraînés (trop lourds pour git : on les regénère avec les scripts d'entraînement)
+**/models/*.pt
+**/models/*.onnx
 
 # caches Python
 __pycache__/
 
-# photos originales haute résolution (~730 Mo) : importées en 224x224 par src/importPhotos.py
-photo_bonbon/
+# classification : photos originales haute résolution (~730 Mo), importées en 224x224 par src/importPhotos.py
+classification/photo_bonbon/
+
+# détection : export Label Studio d'origine (~470 Mo), importé en 1280 px par src/importDataset.py
+detection/export_label_studio/
+# détection : sorties d'entraînement d'Ultralytics (poids, courbes de chaque essai)
+detection/runs/
+# détection : cache des labels créé par Ultralytics
+*.cache

@@ -1,0 +1,7 @@
+# installation : python -m pip install -r requirements.txt
+# pour utiliser le GPU, installer d'abord torch avec CUDA (voir https://pytorch.org/get-started/locally/)
+torch
+torchvision
+pillow
+matplotlib
+numpy
