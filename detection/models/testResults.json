@@ -1,0 +1,118 @@
+{
+    "precision": 0.9432821138371718,
+    "recall": 0.9014126939310843,
+    "mAP50": 0.9563181318131811,
+    "mAP50-95": 0.853887681739908,
+    "perClass": {
+        "crocodile_bleu": {
+            "precision": 0.9798353587383675,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "crocodile_jaune": {
+            "precision": 0.9518395805158172,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "crocodile_orange": {
+            "precision": 0.9825550733625777,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "crocodile_rouge": {
+            "precision": 0.981553150639491,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "crocodile_vert": {
+            "precision": 0.9780708335299453,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "dragibus_bleu": {
+            "precision": 0.9812436714472319,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "dragibus_jaune": {
+            "precision": 0.9569085771523583,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "dragibus_noir": {
+            "precision": 0.9886673627443284,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "dragibus_rose": {
+            "precision": 0.8239506550859337,
+            "recall": 1.0,
+            "mAP50": 0.933993399339934
+        },
+        "dragibus_rouge": {
+            "precision": 1.0,
+            "recall": 0.8417101049333126,
+            "mAP50": 1.0
+        },
+        "dragibus_vert": {
+            "precision": 0.9797392042379461,
+            "recall": 0.8,
+            "mAP50": 0.801980198019802
+        },
+        "oeuf_oeuf": {
+            "precision": 0.9960375813097393,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "ourson_blanc": {
+            "precision": 1.0,
+            "recall": 0.6280155509487282,
+            "mAP50": 0.843234323432343
+        },
+        "ourson_jaune": {
+            "precision": 0.9661869879553101,
+            "recall": 0.5,
+            "mAP50": 0.9009900990099011
+        },
+        "ourson_orangeClair": {
+            "precision": 0.778583238397913,
+            "recall": 1.0,
+            "mAP50": 0.7999999999999998
+        },
+        "ourson_orangeFonce": {
+            "precision": 1.0,
+            "recall": 0.5491164426298505,
+            "mAP50": 0.9298679867986801
+        },
+        "ourson_rouge": {
+            "precision": 0.7638397189186426,
+            "recall": 0.65535887567457,
+            "mAP50": 0.9009900990099009
+        },
+        "ourson_vert": {
+            "precision": 0.7898527199788374,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "schtroumpf_bleu-blanc": {
+            "precision": 0.9848736309940251,
+            "recall": 0.8571428571428571,
+            "mAP50": 0.9554455445544556
+        },
+        "schtroumpf_bleu-jaune": {
+            "precision": 0.9881039493034285,
+            "recall": 1.0,
+            "mAP50": 1.0
+        },
+        "schtroumpf_bleu-rouge": {
+            "precision": 0.8803652101058841,
+            "recall": 1.0,
+            "mAP50": 0.9724972497249724
+        },
+        "tagada_fraise": {
+            "precision": 1.0,
+            "recall": 0.9997354351545364,
+            "mAP50": 1.0
+        }
+    }
+}
